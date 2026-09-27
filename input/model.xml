@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<database
+    name="generated_db"
+    username="postgres"
+    password="1234"
+    host="localhost"
+    port="5432">
+
+    <entity name="Employee">
+        <attribute
+                name="id"
+                type="Long"
+                primaryKey="true"
+                required="true"/>
+        <attribute
+                name="name"
+                type="String"
+                primaryKey="false"
+                required="true"/>
+        <attribute
+                name="email"
+                type="String"
+                primaryKey="false"
+                required="true"/>
+    </entity>
+
+    <entity name="Department">
+        <attribute
+                name="id"
+                type="Long"
+                primaryKey="true"
+                required="true"/>
+        <attribute
+                name="name"
+                type="String"
+                primaryKey="false"
+                required="true"/>
+        <attribute
+                name="location"
+                type="String"
+                primaryKey="false"
+                required="false"/>
+    </entity>
+
+    <entity name="Project">
+        <attribute
+                name="id"
+                type="Long"
+                primaryKey="true"
+                required="true"/>
+        <attribute
+                name="name"
+                type="String"
+                primaryKey="false"
+                required="true"/>
+        <attribute
+                name="StartDate"
+                type="LocalDate"
+                primaryKey="false"
+                required="true"/>
+        <attribute
+                name="EndDate"
+                type="LocalDate"
+                primaryKey="false"
+                required="true"/>
+
+    </entity>
+
+    <entity name="Desk">
+        <attribute
+                name="id"
+                type="Long"
+                primaryKey="true"
+                required="true"/>
+        <attribute
+                name="name"
+                type="String"
+                primaryKey="false"
+                required="true"/>
+    </entity>
+
+    <relationship
+            type="ManyToOne"
+            from="Employee"
+            to="Department"
+            fieldName="department"
+            inverseFieldName="employees"/>
+
+    <relationship
+            type="ManyToMany"
+            from="Employee"
+            to="Project"
+            fieldName="projects"
+            inverseFieldName="employees"/>
+
+    <relationship
+            type="ManyToOne"
+            from="Desk"
+            to="Department"
+            fieldName="department"
+            inverseFieldName="desks"/>
+
+    <relationship
+            type="OneToOne"
+            from="Employee"
+            to="Desk"
+            fieldName="desk"
+            inverseFieldName="employee"/>
+
+</database>
