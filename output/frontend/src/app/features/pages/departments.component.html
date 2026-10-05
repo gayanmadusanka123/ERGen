@@ -1,0 +1,80 @@
+<h2>Department Form</h2>
+
+<form>
+    <label>name</label>
+
+    <input
+        type="text"
+        [(ngModel)]="department.name"
+        name="name"
+    >
+    <label>location</label>
+
+    <input
+        type="text"
+        [(ngModel)]="department.location"
+        name="location"
+    >
+
+    <label>Department</label>
+
+    <select
+        [(ngModel)]="department.department"
+        name="department"
+    >
+        <option [ngValue]="null">
+            Select Department
+        </option>
+
+        <option
+            *ngFor="let item of departments"
+            [ngValue]="item">
+
+            {{ item.name }}
+        </option>
+    </select>
+    <label>Department</label>
+
+    <select
+        [(ngModel)]="department.department"
+        name="department"
+    >
+        <option [ngValue]="null">
+            Select Department
+        </option>
+
+        <option
+            *ngFor="let item of departments"
+            [ngValue]="item">
+
+            {{ item.name }}
+        </option>
+    </select>
+
+    <button type="button">Save</button>
+</form>
+
+<table>
+    <thead>
+        <tr>
+            <th>id</th>
+            <th>name</th>
+            <th>location</th>
+
+            <th>Department</th>
+            <th>Department</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+    <tbody>
+        @for (item of departments; track item.id){
+            <tr>
+                <td>{{ item.id }}</td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.location }}</td>
+                <td>{{ item.department.name }}</td>
+                <td>{{ item.department.name }}</td>
+            </tr>
+        }
+    </tbody>
+</table>

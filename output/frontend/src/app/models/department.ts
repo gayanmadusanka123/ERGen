@@ -1,0 +1,11 @@
+import { Department } from './department';
+import { Department } from './department';
+
+export interface Department{
+    id: number;
+    name: string;
+    location: string;
+
+    department: Department;
+    department: Department;
+}
