@@ -38,6 +38,8 @@ export class ${entity.name}sComponent implements OnInit {
         </#list>
     ) {}
 
+    isEditing: boolean = false;
+
     ngOnInit(): void {
         this.load${entity.name}s();
 
@@ -67,7 +69,7 @@ export class ${entity.name}sComponent implements OnInit {
 </#list>
 
     save(): void{
-        if(this.${entity.name?lower_case}.id){
+        if(this.isEditing){
             this.${entity.name?lower_case}Service
                 .update(
                     this.${entity.name?lower_case}.id,
@@ -89,6 +91,7 @@ export class ${entity.name}sComponent implements OnInit {
 
     edit(item: ${entity.name}): void{
         this.${entity.name?lower_case} = { ...item };
+        this.isEditing = true;
     }
 
     delete(id: number): void{
@@ -102,5 +105,7 @@ export class ${entity.name}sComponent implements OnInit {
     cancel(): void{
         this.${entity.name?lower_case} =
             {} as ${entity.name};
+        this.isEditing = false;
     }
+
 }

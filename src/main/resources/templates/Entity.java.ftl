@@ -1,5 +1,6 @@
 package com.generated.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,9 +28,8 @@ public class ${entity.name}{
 <#else>
     @Column(nullable = true)
 </#if>
-    private ${attribute.type} ${attribute.name};
+    private ${attribute.type} ${attribute.name?uncap_first};
 </#list>
-
 <#list entity.relationships as relationship>
     <#if relationship.from == entity.name>
         <#if relationship.type == "ManyToOne">
@@ -54,6 +54,7 @@ public class ${entity.name}{
     <#elseif relationship.to == entity.name>
         <#if relationship.type == "ManyToOne">
     @OneToMany(mappedBy = "${relationship.fieldName}")
+    @JsonIgnore
     private List<${relationship.from}> ${relationship.inverseFieldName};
         </#if>
         <#if relationship.type == "OneToOne">

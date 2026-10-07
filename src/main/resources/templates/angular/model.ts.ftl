@@ -6,7 +6,7 @@ import { ${relationship.to} } from './${relationship.to?uncap_first}';
 
 export interface ${entity.name}{
 <#list entity.attributes as attribute>
-    ${attribute.name}: ${attribute.typeScriptType};
+    ${attribute.name?uncap_first}: ${attribute.typeScriptType};
 </#list>
 
 <#list entity.relationships as relationship>
