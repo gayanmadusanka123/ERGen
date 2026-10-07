@@ -2,7 +2,7 @@ package com.ergen.ui;
 
 public class test {
     public static void main(String[] args) {
-        UIApplication app = new UIApplication();
+        UISpecification app = new UISpecification();
         app.setName("Employee Management");
         app.setLayout("dashboard");
 

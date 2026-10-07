@@ -1,0 +1,59 @@
+UISpecification
+ ├── name
+ ├── layout
+ └── pages[]
+       │
+       └── UIPage
+            ├── name
+            ├── entity
+            ├── view
+            └── components[]
+                  │
+                  └── UIComponent
+                       ├── type
+                       ├── entity
+                       └── features[]
+
+{
+  "name": "Employee Management",
+  "layout": "sidebar",
+  "pages": [
+    {
+      "name": "Dashboard",
+      "entity": null,
+      "route": null,
+      "view": "dashboard",
+      "componentClass": null,
+      "componentFile": null,
+      "components": [
+        {
+          "type": "metric",
+          "entity": "Employee",
+          "features": [
+            "count"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Employees",
+      "entity": "Employee",
+      "route": null,
+      "view": "crud",
+      "componentClass": null,
+      "componentFile": null,
+      "components": [
+        {
+          "type": "table",
+          "entity": "Employee",
+          "features": [
+            "create",
+            "edit",
+            "delete",
+            "search"
+          ]
+        }
+      ]
+    }
+  ]
+}

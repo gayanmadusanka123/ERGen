@@ -31,6 +31,7 @@ public class UIPage {
 
     public UIPage(){
         components = new ArrayList<>();
+        relationships = new ArrayList<>();
     }
 
 }

@@ -7,13 +7,13 @@ import java.util.List;
 
 @Getter
 @Setter
-public class UIApplication {
+public class UISpecification {
     private String name;
     private String layout;
 
     private List<UIPage> pages;
 
-    public UIApplication(){
+    public UISpecification(){
         pages = new ArrayList<>();
     }
 }
