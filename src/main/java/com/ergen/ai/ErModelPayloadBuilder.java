@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.*;
 
 
-public class ErModelPayLoadBuilder {
+public class ErModelPayloadBuilder {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     public Map<String, Object> buildErModel(XmlParser parser){
