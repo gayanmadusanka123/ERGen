@@ -6,6 +6,10 @@ import com.ergen.ui.UIPage;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
+import com.ergen.ui.UISpecification;
+import java.util.HashSet;
+import java.util.Set;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.Writer;
@@ -25,10 +29,7 @@ public class AngularGenerator {
     }
 
     public void generate(List<Entity> entities) throws Exception{
-        generateModels(entities);
-        generateServices(entities);
-
-        generateRootTemplate();
+        UISpecification specification = new UISpecification();
 
         List<UIPage> pages = new ArrayList<>();
 
@@ -40,26 +41,64 @@ public class AngularGenerator {
             page.setRoute(entity.getName().toLowerCase() + "s");
             page.setView("table");
 
-            page.setComponentClass(entity.getName() + "sComponent");
-            page.setComponentFile(entity.getName().toLowerCase() + "s.component");
-
-            page.setRelationships(entity.getRelationships());
-
             pages.add(page);
+        }
 
-            generateTablePage(page, entity);
-            generateComponents(page, entity);
+        specification.setPages(pages);
 
-            for(Relationship relationship : entity.getRelationships()){
+        generate(entities, specification);
+    }
+
+    public void generate(List<Entity> entities, UISpecification specification) throws Exception{
+        if(specification == null || specification.getPages() == null){
+            throw new IllegalArgumentException(
+                    "UI specification or its pages are missing."
+            );
+        }
+
+        generateModels(entities);
+        generateServices(entities);
+        generateRootTemplate();
+
+        List<UIPage> supportedPages = new ArrayList<>();
+        Set<String> usedRoutes = new HashSet<>();
+
+        for(UIPage page : specification.getPages()){
+            if(page.getEntity() == null || page.getEntity().isBlank()){
                 System.out.println(
-                    "Entity:" + entity.getName()
-                    + " | Type: " +  relationship.getType()
-                    + " | From: " + relationship.getFrom()
-                    + " | To: " + relationship.getTo()
+                        "Skipping page '" + page.getName() + "': pages without an entity are not supported yet."
+                );
+                continue;
+            }
+
+            if(page.getView() != null && !page.getView().equalsIgnoreCase("table")){
+                System.out.println(
+                        "Skipping Page '" + page.getName()
+                        + "': view '" +  page.getView()
+                        + "' is not supported by the current templates."
+                );
+                continue;
+            }
+
+            Entity matchedEntity = null;
+
+            for(Entity entity : entities){
+                if(entity.getName().equalsIgnoreCase(page.getName())){
+                    matchedEntity = entity;
+                    break;
+                }
+            }
+
+            if(matchedEntity == null){
+                throw new IllegalArgumentException(
+                        "AI specification references unknow entity: "
+                        +page.getEntity()
                 );
             }
+
+            String entityName = matchedEntity.getName();
+            String entityLower = entityName.toLowerCase();
         }
-        generateRoutes(pages);
     }
 
     public void generateModels(List<Entity> entities) throws Exception{

@@ -31,8 +31,11 @@ public class Main {
             generator.generatePOMXML();
             generator.generateApplicationProperties(parser);
 
+            /*
             AngularGenerator angularGenerator = new AngularGenerator();
-            angularGenerator.generate(entities);
+            angularGenerator.generate(entities);*/
+
+
 
             System.out.println("Code generation Completed");
 
