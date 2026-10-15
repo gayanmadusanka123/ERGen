@@ -1,8 +1,5 @@
-import os
 from pydantic import BaseModel, Field
-from typing import Optional, List
-import instructor
-from google import genai
+from typing import Optional
 
 class UIComponent(BaseModel):
     type: str = Field(description="The type of UI element or layout control, e.g., 'metric', 'table', 'form', 'card', 'chart'")
@@ -52,22 +49,4 @@ class UISpecification(BaseModel):
         description="The list of pages that make up the full application UI"
     )
 
-os.environ["GEMINI_API_KEY"] = "AQ.Ab8RN6LPwDxLgSeLVcG6mTAk3yFsnStIn88fkkD-IhJk2NoFrQ"
 
-genai_client = genai.Client()
-
-client = instructor.from_provider("google/gemini-3.5-flash-lite")
-
-user_input_description = "Create an application called 'Employee Hub' using a sidebar navigation. Include two pages: a 'Dashboard' page using a dashboard view that contains a metric card for employee count, and an 'Employees' page using a crud view that contains a table component for managing employees with create, edit, delete, and search actions."
-
-extracted_specification: UISpecification = client.chat.completions.create(
-    response_model=UISpecification,
-    messages=[
-        {
-            "role": "user",
-            "content": user_input_description
-        }
-    ]
-)
-
-print(extracted_specification.model_dump_json(indent=2))

@@ -1,25 +1,21 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-from typing import Optional
+from typing import Any
 
-from app.planner import AIPlanner
 from app.models import UISpecification
+from app.planner import generate_ui_specification
 
 app = FastAPI()
-planner = AIPlanner()
 
 class AIRequest(BaseModel):
     user_description: str
-    entities: list
-    previous_specification: Optional[dict] = None
+    er_model: dict[str, Any]
+    previous_specification: dict[str, Any] | None = None
 
-@app.post("/plan")
+@app.post("/plan", response_model=UISpecification)
 def create_plan(request: AIRequest):
-
-    specification = planner.generate(
-        request.user_description,
-        request.entities,
-        request.previous_specification
+    return generate_ui_specification(
+        user_description=request.user_description,
+        er_model=request.er_model,
+        previous_specification=request.previous_specification,
     )
-
-    return specification

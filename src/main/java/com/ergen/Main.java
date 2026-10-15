@@ -1,5 +1,6 @@
 package com.ergen;
 
+import com.ergen.ai.ErModelPayLoadBuilder;
 import com.ergen.database.Postgres;
 import com.ergen.generator.AngularGenerator;
 import com.ergen.generator.CodeGenerator;
@@ -13,6 +14,7 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 public class Main {
     public static void main(String[] args) throws ParserConfigurationException, IOException, SAXException {
@@ -37,6 +39,11 @@ public class Main {
             angularGenerator.generate(entities);
 
             System.out.println("Code generation Completed");
+
+            /*
+            ErModelPayLoadBuilder payLoadBuilder = new ErModelPayLoadBuilder();
+            Map<String, Object> erModel = payLoadBuilder.buildErModel(parser);
+            System.out.println(payLoadBuilder.toJson(erModel));
             /*
             //print entities and their attributes
             for(Entity entity : entities){
