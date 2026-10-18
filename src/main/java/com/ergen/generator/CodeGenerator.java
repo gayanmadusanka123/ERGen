@@ -181,4 +181,33 @@ public class CodeGenerator {
         System.out.println("Generated: " + outputFile.getPath());
     }
 
+    public void generateDockerFile(XmlParser parser) throws Exception{
+        File outputDirectory = new File("output");
+
+        if(!outputDirectory.exists()){
+            outputDirectory.mkdirs();
+        }
+        Template template = configuration.getTemplate("docker-compose.yml.ftl");
+
+        Map<String, Object> data = new HashMap<>();
+
+        List<Postgres> databases = parser.getDatabase();
+
+        if (databases.isEmpty()) {
+            throw new RuntimeException("No database configuration found in XML");
+        }
+
+        Postgres database = databases.getFirst();
+
+        data.put("database", database);
+
+        File outputFile = new File(outputDirectory, "docker-compose.yml");
+        Writer writer = new FileWriter(outputFile);
+
+        template.process(data, writer);
+        writer.close();
+
+        System.out.println("Generated: " + outputFile.getPath());
+    }
+
 }

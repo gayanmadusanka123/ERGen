@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <database
-    name="generated_db"
+    name="generated_db_new"
     username="postgres"
     password="1234"
     host="localhost"
-    port="5432">
+    port="5433">
 
     <entity name="Employee">
         <attribute

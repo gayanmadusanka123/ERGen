@@ -3,6 +3,12 @@ import instructor
 
 from .models import UISpecification
 
+# $env:GEMINI_API_KEY="AQ.Ab8RN6JVrIuo2YUu_4Y8UpfguoHeRKDJmctx2bXzdjiXXXq0FQ"
+# api_key = "AQ.Ab8RN6JVrIuo2YUu_4Y8UpfguoHeRKDJmctx2bXzdjiXXXq0FQ"
+
+# to run the fastapi
+# python -m uvicorn main:app --reload
+
 
 # Initialize the Gemini client
 client = instructor.from_provider(

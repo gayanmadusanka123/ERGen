@@ -1,16 +1,22 @@
 package com.ergen;
 
+import com.ergen.ai.AIPlannerClient;
+import com.ergen.ai.ErModelPayloadBuilder;
 import com.ergen.database.Postgres;
 import com.ergen.generator.AngularGenerator;
 import com.ergen.generator.CodeGenerator;
 import com.ergen.model.Entity;
 import com.ergen.model.Relationship;
 import com.ergen.parser.XmlParser;
+import com.ergen.ui.UISpecification;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 public class Main {
     public static void main(String[] args) throws ParserConfigurationException, IOException, SAXException {
@@ -30,10 +36,35 @@ public class Main {
 
             generator.generatePOMXML();
             generator.generateApplicationProperties(parser);
+            generator.generateDockerFile(parser);
 
             /*
             AngularGenerator angularGenerator = new AngularGenerator();
             angularGenerator.generate(entities);*/
+
+            ErModelPayloadBuilder payloadBuilder = new ErModelPayloadBuilder();
+
+            Map<String, Object> erModel = payloadBuilder.buildErModel(parser);
+
+            String description = "Create CRUD table pages with search for the entities in this system. Donot create a Desk page";
+
+            AIPlannerClient aiPlanner = new AIPlannerClient();
+
+            JsonNode aiResponse = aiPlanner.generateSpecification(
+                    description,
+                    erModel,
+                    null
+            );
+
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            UISpecification specification = objectMapper.treeToValue(
+                    aiResponse,
+                    UISpecification.class
+            );
+
+            AngularGenerator angularGenerator = new AngularGenerator();
+            angularGenerator.generate(entities, specification);
 
 
 

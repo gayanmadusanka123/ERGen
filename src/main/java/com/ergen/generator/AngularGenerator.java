@@ -71,34 +71,95 @@ public class AngularGenerator {
                 continue;
             }
 
-            if(page.getView() != null && !page.getView().equalsIgnoreCase("table")){
+            String requestedView = page.getView();
+
+            if(requestedView == null || requestedView.isBlank()){
+                requestedView = "crud";
+            }
+
+            if(requestedView.equalsIgnoreCase("crud") || requestedView.equalsIgnoreCase("table")){
+                page.setView("table");
+            }else{
                 System.out.println(
-                        "Skipping Page '" + page.getName()
-                        + "': view '" +  page.getView()
+                        "Skipping page '" + page.getName()
+                        + "': view '" + requestedView
                         + "' is not supported by the current templates."
                 );
                 continue;
             }
 
+            System.out.println(
+                    "AI requested entity: [" + page.getEntity()
+                            + "], length: " + page.getEntity().length()
+            );
+
+            System.out.println("Entities from XML:");
+            for (Entity entity : entities) {
+                System.out.println(" - [" + entity.getName() + "]");
+            }
+
+
             Entity matchedEntity = null;
 
-            for(Entity entity : entities){
-                if(entity.getName().equalsIgnoreCase(page.getName())){
+            String requestedEntity = page.getEntity();
+
+            System.out.println("AI requested entity: [" + requestedEntity + "]");
+
+            for (Entity entity : entities) {
+                String xmlEntityName = entity.getName();
+
+                System.out.println(
+                        "Comparing [" + requestedEntity + "] with ["
+                                + xmlEntityName + "]"
+                );
+
+                if (xmlEntityName != null
+                        && requestedEntity != null
+                        && xmlEntityName.trim().equalsIgnoreCase(
+                        requestedEntity.trim())) {
+
                     matchedEntity = entity;
+
+                    System.out.println(
+                            "MATCH FOUND: " + matchedEntity.getName()
+                    );
+
                     break;
                 }
             }
 
-            if(matchedEntity == null){
+            if (matchedEntity == null) {
                 throw new IllegalArgumentException(
-                        "AI specification references unknow entity: "
-                        +page.getEntity()
+                        "AI specification references unknown entity: ["
+                                + requestedEntity + "]"
                 );
             }
 
             String entityName = matchedEntity.getName();
             String entityLower = entityName.toLowerCase();
+
+            page.setEntity(entityName);
+            page.setRoute(entityLower + "s");
+            page.setView("table");
+
+            page.setComponentClass(entityName + "sComponent");
+            page.setComponentFile(entityLower + "s.component");
+
+            page.setRelationships(matchedEntity.getRelationships());
+
+            generateTablePage(page, matchedEntity);
+            generateComponents(page, matchedEntity);
+            supportedPages.add(page);
+
         }
+
+        generateRoutes(supportedPages);
+
+
+        System.out.println("Supported pages count: " + supportedPages.size());
+        System.out.println("Starting route generating...");
+        generateRoutes(supportedPages);
+        System.out.println("Finished route generating");
     }
 
     public void generateModels(List<Entity> entities) throws Exception{
