@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgFor } from '@angular/common';
-import { ${entity.name}Service } from '../../services/${entity.name?lower_case}.service';
-import { ${entity.name} } from '../../models/${entity.name?lower_case}';
+
+import { ${entity.name}Service } from './services/${entity.name?lower_case}.service';
+import { ${entity.name} } from './models/${entity.name?lower_case}.model';
 
 <#list entity.relationships as relationship>
     <#if relationship.type == "ManyToOne" && relationship.from == entity.name>
-import { ${relationship.to}Service } from '../../services/${relationship.to?lower_case}.service';
-import { ${relationship.to} } from '../../models/${relationship.to?lower_case}';
+import { ${relationship.to}Service } from '../${relationship.to?lower_case}s/services/${relationship.to?lower_case}.service';
+import { ${relationship.to} } from '../${relationship.to?lower_case}s/models/${relationship.to?lower_case}.model';
     </#if>
 </#list>
 
@@ -15,7 +16,7 @@ import { ${relationship.to} } from '../../models/${relationship.to?lower_case}';
     selector: 'app-${entity.name?lower_case}s',
     standalone: true,
     imports: [NgFor, FormsModule],
-    templateUrl: '../pages/${entity.name?lower_case}s.component.html'
+    templateUrl: './${entity.name?lower_case}s.component.html'
 })
 export class ${entity.name}sComponent implements OnInit {
 

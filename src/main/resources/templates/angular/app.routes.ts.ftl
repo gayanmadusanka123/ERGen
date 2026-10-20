@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 
 <#list pages as page>
-import { ${page.componentClass} } from './features/components/${page.componentFile}';
+import { ${page.componentClass} } from './${page.route}/${page.componentFile}';
 </#list>
 
 export const routes: Routes = [

@@ -7,19 +7,19 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 
 import com.ergen.ui.UISpecification;
-import java.util.HashSet;
-import java.util.Set;
+
+import java.util.*;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.Writer;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class AngularGenerator {
     private final Configuration configuration;
+
+    private String getFeatureName(Entity entity) {
+        return entity.getName().toLowerCase() + "s";
+    }
 
     public AngularGenerator() throws Exception{
         configuration = new Configuration(Configuration.VERSION_2_3_34);
@@ -153,9 +153,6 @@ public class AngularGenerator {
 
         }
 
-        generateRoutes(supportedPages);
-
-
         System.out.println("Supported pages count: " + supportedPages.size());
         System.out.println("Starting route generating...");
         generateRoutes(supportedPages);
@@ -163,48 +160,45 @@ public class AngularGenerator {
     }
 
     public void generateModels(List<Entity> entities) throws Exception{
-        File outputDirectory = new File("output/frontend/src/app/models");
-
-        if(!outputDirectory.exists()){
-            outputDirectory.mkdirs();
-        }
 
         Template template = configuration.getTemplate("angular/model.ts.ftl");
 
         for (Entity entity : entities){
+            File outputDirectory = new File("output/frontend/src/app/" + getFeatureName(entity) + "/models");
+
+            outputDirectory.mkdirs();
+
             Map<String, Object> data = new HashMap<>();
             data.put("entity", entity);
 
-            File outputFile = new File(outputDirectory, entity.getName().toLowerCase() + ".ts");
+            File outputFile = new File(outputDirectory, entity.getName().toLowerCase() + ".model.ts");
 
-            Writer writer = new FileWriter(outputFile);
-
-            template.process(data, writer);
-            writer.close();
+            try(Writer writer = new FileWriter(outputFile)){
+                template.process(data, writer);
+            }
 
             System.out.println("Generated: " + outputFile.getPath());
+
         }
     }
 
     public void generateServices(List<Entity> entities) throws Exception {
-        File outputDirectory = new File("output/frontend/src/app/services");
-
-        if (!outputDirectory.exists()) {
-            outputDirectory.mkdirs();
-        }
 
         Template template = configuration.getTemplate("angular/service.ts.ftl");
 
         for (Entity entity : entities) {
+            File outputDirectory = new File("output/frontend/src/app/" + getFeatureName(entity) + "/services");
+
+            outputDirectory.mkdirs();
+
             Map<String, Object> data = new HashMap<>();
             data.put("entity", entity);
 
             File outputFile = new File(outputDirectory, entity.getName().toLowerCase() + ".service.ts");
 
-            Writer writer = new FileWriter(outputFile);
-
-            template.process(data, writer);
-            writer.close();
+            try(Writer writer = new FileWriter(outputFile)){
+                template.process(data, writer);
+            }
 
             System.out.println("Generated: " + outputFile.getPath());
         }
@@ -214,21 +208,18 @@ public class AngularGenerator {
         Template template = configuration.getTemplate("angular/pages/table.component.html.ftl");
 
         Map<String, Object> data = new HashMap<>();
-
         data.put("entity", entity);
         data.put("page", page);
 
-        File outputDirectory = new File("output/frontend/src/app/features/pages");
+        File outputDirectory = new File("output/frontend/src/app/" + getFeatureName(entity));
 
-        if (!outputDirectory.exists()) {
-            outputDirectory.mkdirs();
+        outputDirectory.mkdirs();
+
+        File outputFile = new File(outputDirectory, getFeatureName(entity) + ".component.html");
+
+        try(Writer writer = new FileWriter(outputFile)){
+            template.process(data, writer);
         }
-        File outputFile = new File(outputDirectory, entity.getName().toLowerCase() + "s.component.html");
-
-        Writer writer = new FileWriter(outputFile);
-
-        template.process(data, writer);
-        writer.close();
 
         System.out.println("Generated: " + outputFile.getPath());
     }
@@ -237,22 +228,17 @@ public class AngularGenerator {
         Template template = configuration.getTemplate("angular/components/table.component.ts.ftl");
 
         Map<String, Object> data = new HashMap<>();
-
         data.put("entity", entity);
         data.put("page", page);
 
+        File outputDirectory = new File("output/frontend/src/app/" + getFeatureName(entity));
 
-        File outputDirectory = new File("output/frontend/src/app/features/components");
+        outputDirectory.mkdirs();
+        File outputFile = new File(outputDirectory,getFeatureName(entity) + ".component.ts");
 
-        if (!outputDirectory.exists()) {
-            outputDirectory.mkdirs();
+        try(Writer writer = new FileWriter(outputFile)){
+            template.process(data, writer);
         }
-        File outputFile = new File(outputDirectory,entity.getName().toLowerCase() + "s.component.ts");
-
-        Writer writer = new FileWriter(outputFile);
-
-        template.process(data, writer);
-        writer.close();
 
         System.out.println("Generated: " + outputFile.getPath());
     }

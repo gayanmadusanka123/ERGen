@@ -1,6 +1,6 @@
 <#list entity.relationships as relationship>
     <#if relationship.type == "ManyToOne" && relationship.from == entity.name>
-import { ${relationship.to} } from './${relationship.to?uncap_first}';
+import { ${relationship.to} } from '../../${relationship.to?uncap_first}s/models/${relationship.to?uncap_first}.model';
     </#if>
 </#list>
 
