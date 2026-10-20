@@ -152,6 +152,8 @@ public class AngularGenerator {
             supportedPages.add(page);
 
         }
+        generateHomePage(supportedPages);
+        generateHomeComponent();
 
         System.out.println("Supported pages count: " + supportedPages.size());
         System.out.println("Starting route generating...");
@@ -276,6 +278,46 @@ public class AngularGenerator {
         Map<String, Object> data = new HashMap<>();
 
         File outputFile = new File(outputDirectory,"app.html");
+        Writer writer = new FileWriter(outputFile);
+
+        template.process(data, writer);
+        writer.close();
+
+        System.out.println("Generated: " + outputFile.getPath());
+    }
+
+    private void generateHomePage(List<UIPage> pages) throws Exception{
+        Template template = configuration.getTemplate("angular/pages/home.component.html.ftl");
+
+        File outputDirectory = new File("output/frontend/src/app/home/");
+        if(!outputDirectory.exists()){
+            outputDirectory.mkdirs();
+        }
+
+        Map<String, Object> data = new HashMap<>();
+
+        data.put("pages", pages);
+
+        File outputFile = new File(outputDirectory,"home.component.html");
+        Writer writer = new FileWriter(outputFile);
+
+        template.process(data, writer);
+        writer.close();
+
+        System.out.println("Generated: " + outputFile.getPath());
+    }
+
+    private void generateHomeComponent() throws Exception{
+        Template template = configuration.getTemplate("angular/components/home.component.ts.ftl");
+
+        File outputDirectory = new File("output/frontend/src/app/home/");
+        if(!outputDirectory.exists()){
+            outputDirectory.mkdirs();
+        }
+
+        Map<String, Object> data = new HashMap<>();
+
+        File outputFile = new File(outputDirectory,"home.component.ts");
         Writer writer = new FileWriter(outputFile);
 
         template.process(data, writer);
