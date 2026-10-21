@@ -1,6 +1,6 @@
-
-import json
 from urllib.request import Request, urlopen
+from urllib.error import HTTPError
+import json
 
 # Read the original Draw.io XML without manually editing it.
 with open("drawio.xml", "r", encoding="utf-8") as file:
@@ -19,9 +19,14 @@ request = Request(
 )
 
 # Send the request and print the response.
-with urlopen(request) as response:
-    print("HTTP status:", response.status)
-    print(json.dumps(
-        json.loads(response.read().decode("utf-8")),
-        indent=2
-    ))
+
+try:
+    with urlopen(request) as response:
+        result = json.loads(response.read().decode("utf-8"))
+        print(json.dumps(result, indent=4, ensure_ascii=False))
+
+except HTTPError as exc:
+    print("HTTP status:", exc.code)
+    print("Error response:")
+    print(exc.read().decode("utf-8"))
+
